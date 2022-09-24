@@ -19,7 +19,7 @@ class TodoItem extends Component {
     return (
       // 子组件通过 props 的形式来接收到父组件传递过来的参数
       // <li onClick={this.handleDelete.bind(this)}>{ this.props.content }</li>
-      <li onClick={this.handleDelete}>{ content }</li>
+      <li onClick={this.handleDelete} dangerouslySetInnerHTML={{__html: content}}></li>
     )
   }
 }

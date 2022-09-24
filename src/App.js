@@ -31,6 +31,9 @@ class App extends Component {
   }
 
   handleDelete(index) {
+    // immutable
+    // state 不允许我们做任何的改变
+
     const list = [...this.state.list]; // list 拷贝
     list.splice(index, 1);
     this.setState({
@@ -61,8 +64,9 @@ class App extends Component {
       // <div className="App">
       // <React.Fragment>
       <Fragment>
+        <label htmlFor="insertArea">输入内容</label>
         {/* <input value={this.state.inputValue} type="text" onChange={this.handleInputChange.bind(this)} /> */}
-        <input value={this.state.inputValue} type="text" onChange={this.handleInputChange} />
+        <input id="insertArea" value={this.state.inputValue} type="text" onChange={this.handleInputChange} />
         {/* <button onClick={this.handleBtnClick.bind(this)}>add</button> */}
         {/* <button style={{background: 'red'}} onClick={this.handleBtnClick}>add</button> */}
         <button className='red-btn' onClick={this.handleBtnClick}>add</button>
