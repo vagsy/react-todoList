@@ -1,25 +1,93 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, Fragment } from 'react';
+import TodoItem from './TodoItem';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// 定义一个 React 组件
+// class App extends React.Component {
+class App extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      list: [],
+      inputValue: ''
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this); // 提升代码执行性能
+    this.handleBtnClick = this.handleBtnClick.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+
+  handleBtnClick() {
+    this.setState({
+      list: [...this.state.list, this.state.inputValue],
+      inputValue: ''
+    });
+  }
+
+  handleInputChange(e) {
+    this.setState({
+      inputValue: e.target.value
+    });
+  }
+
+  handleDelete(index) {
+    const list = [...this.state.list]; // list 拷贝
+    list.splice(index, 1);
+    this.setState({
+      list
+    });
+  }
+
+  getTodoItems() {
+    return (
+      this.state.list.map((item, index) => {
+        // 父组件通过属性的形式向子组件传递参数
+        // return <TodoItem key={index} content={item} index={index} delete={this.handleDelete.bind(this)} />
+        return (
+          <TodoItem
+            key={index}
+            index={index}
+            content={item}
+            delete={this.handleDelete}
+          />
+        )
+      })
+    );
+  }
+
+  render() {
+    // jsx 语法
+    return (
+      // <div className="App">
+      // <React.Fragment>
+      <Fragment>
+        {/* <input value={this.state.inputValue} type="text" onChange={this.handleInputChange.bind(this)} /> */}
+        <input value={this.state.inputValue} type="text" onChange={this.handleInputChange} />
+        {/* <button onClick={this.handleBtnClick.bind(this)}>add</button> */}
+        {/* <button style={{background: 'red'}} onClick={this.handleBtnClick}>add</button> */}
+        <button className='red-btn' onClick={this.handleBtnClick}>add</button>
+        <ul>
+          {/* {
+            this.state.list.map((item, index) => {
+              // 父组件通过属性的形式向子组件传递参数
+              // return <TodoItem key={index} content={item} index={index} delete={this.handleDelete.bind(this)} />
+              return (
+                <TodoItem
+                  key={index}
+                  index={index}
+                  content={item}
+                  delete={this.handleDelete}
+                />
+              )
+            })
+          } */}
+          { this.getTodoItems() }
+        </ul>
+      {/* </React.Fragment> */}
+      </Fragment>
+      // </div>
+    );
+  }
 }
 
 export default App;
