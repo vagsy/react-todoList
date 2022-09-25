@@ -18,26 +18,45 @@ class App extends Component {
   }
 
   handleBtnClick() {
-    this.setState({
-      list: [...this.state.list, this.state.inputValue],
+    // this.setState({
+    //   list: [...this.state.list, this.state.inputValue],
+    //   inputValue: ''
+    // });
+    this.setState((prevState) => ({ // prevState 修改数据之前的数据
+      list: [...prevState.list, prevState.inputValue],
       inputValue: ''
-    });
+    }));
   }
 
   handleInputChange(e) {
-    this.setState({
-      inputValue: e.target.value
-    });
+    // this.setState({
+    //   inputValue: e.target.value
+    // });
+
+    const value = e.target.value;
+    // this.setState(() => {
+    //   return {
+    //     inputValue: value
+    //   }
+    // });
+    this.setState(() => ({
+      inputValue: value
+    }))
   }
 
   handleDelete(index) {
     // immutable
     // state 不允许我们做任何的改变
 
-    const list = [...this.state.list]; // list 拷贝
-    list.splice(index, 1);
-    this.setState({
-      list
+    // const list = [...this.state.list]; // list 拷贝
+    // list.splice(index, 1);
+    // this.setState({
+    //   list
+    // });
+    this.setState((prevState) => {
+      const list = [...prevState.list];
+      list.splice(index, 1);
+      return { list };
     });
   }
 
