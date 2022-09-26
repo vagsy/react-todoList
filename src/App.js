@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Test from './Test';
 import TodoItem from './TodoItem';
+import axios from 'axios';
 
 // 定义一个 React 组件
 // class App extends React.Component {
@@ -11,6 +13,7 @@ class App extends Component {
 
     // 当组件的 state 或者 props 发生改变的时候，render 函数就会重新执行
     this.state = {
+      show: true,
       list: [],
       inputValue: ''
     };
@@ -18,6 +21,7 @@ class App extends Component {
     this.handleInputChange = this.handleInputChange.bind(this); // 提升代码执行性能
     this.handleBtnClick = this.handleBtnClick.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
   }
 
   handleBtnClick() {
@@ -68,18 +72,35 @@ class App extends Component {
     });
   }
 
+
+  handleToggle() {
+    this.setState(() => ({
+      show: !this.state.show
+    }));
+  }
+
   getTodoItems() {
     return (
       this.state.list.map((item, index) => {
         // 父组件通过属性的形式向子组件传递参数
         // return <TodoItem key={index} content={item} index={index} delete={this.handleDelete.bind(this)} />
         return (
-          <TodoItem
-            key={index}
-            index={index}
-            content={item}
-            delete={this.handleDelete}
-          />
+          <TransitionGroup>
+            <CSSTransition
+              timeout={1000}
+              classNames='fade'
+              unmountOnExit
+              onEntered={(el) => {el.style.color='blue'}}
+              appear={true}
+              key={index}
+            >
+              <TodoItem
+                index={index}
+                content={item}
+                delete={this.handleDelete}
+              />
+            </CSSTransition>
+          </TransitionGroup>
         )
       })
     );
@@ -90,6 +111,7 @@ class App extends Component {
     console.log('componentWillMount');
   }
 
+  // render 函数会被反复的执行
   render() {
     console.log('render')
     // jsx 语法
@@ -127,15 +149,37 @@ class App extends Component {
           { this.getTodoItems() }
         </ul>
         <Test content={this.state.inputValue} />
+        <div className={this.state.show ? 'show' : 'hide'}>Element</div>
+        <button onClick={this.handleToggle}>toggle</button>
+        <CSSTransition
+          in={this.state.show}
+          timeout={1000}
+          classNames='fade'
+          unmountOnExit
+          onEntered={(el) => {el.style.color='blue'}}
+          appear={true}
+        >
+          <div>CSSTransition</div>
+        </CSSTransition>
+        {/* <button onClick={this.CSSTransitionToggle}>CSSTransitionToggle</button> */}
       {/* </React.Fragment> */}
       </Fragment>
-      // </div>
+      // </div> 
     );
   }
 
   // 组件被挂载到页面之后，自动被执行
   componentDidMount() {
     console.log('componentDidMount');
+    axios.get('/api/todolist')
+      .then((res) => {
+        this.setState(() => ({
+          list: [...res.data]
+        }));
+      })
+      .catch(() => {
+        // alert('error')
+      });
   }
 
   // 组件被更新之前，它会自动被执行

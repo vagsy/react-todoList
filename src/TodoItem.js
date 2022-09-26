@@ -28,7 +28,17 @@ class TodoItem extends Component {
     console.log('child componentWillUnmount');
   }
 
+  // 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.content !== this.props.content) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   render() {
+    console.log('child render');
     const { content, test } = this.props;
     return (
       // 子组件通过 props 的形式来接收到父组件传递过来的参数
